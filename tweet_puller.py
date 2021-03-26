@@ -20,5 +20,5 @@ new_search = search_words + " -filter:retweets"
  
 for tweet in tweepy.Cursor(api.search,q=new_search,count=100,
                            lang="en",
-                           since_id=0).items():
+                           since_id=0).items(100):
     csvWriter.writerow([tweet.created_at, tweet.text.encode('utf-8'),tweet.user.screen_name.encode('utf-8'), tweet.user.location.encode('utf-8')])
