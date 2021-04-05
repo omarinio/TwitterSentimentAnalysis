@@ -1,7 +1,14 @@
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from textblob import TextBlob
+import json
 
 analyzer = SentimentIntensityAnalyzer()
 
-vs = analyzer.polarity_scores("The election fraud that was the 2020 election should be fully investigated and exposed and then Trump should be granted an extra term.")
-
-print(vs)
+with open("tweets.json") as json_file:
+    data = json.load(json_file)
+    for user in data:
+        print(data[user][0]['text'])    
+        vs = analyzer.polarity_scores(data[user][0]['text']) 
+        print(vs)
+        testimonial = TextBlob(data[user][0]['text'])
+        print(testimonial.sentiment)

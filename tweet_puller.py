@@ -45,7 +45,7 @@ def get_tweets():
             tweets_pulled[tweet.user.screen_name].append({
                 "user_name": tweet.user.name,
                 "created_at": str(tweet.created_at),
-                "text": tweet.full_text,
+                "text": clean_tweet(tweet.full_text),
                 "user_location": tweet.user.location,
                 "user_followers_count": tweet.user.followers_count,
                 "user_created_at": str(tweet.user.created_at),
@@ -56,7 +56,7 @@ def get_tweets():
             tweets_pulled[tweet.user.screen_name] = [{
                 "user_name": tweet.user.name,
                 "created_at": str(tweet.created_at),
-                "text": tweet.full_text,
+                "text": clean_tweet(tweet.full_text),
                 "user_location": tweet.user.location,
                 "user_followers_count": tweet.user.followers_count,
                 "user_created_at": str(tweet.user.created_at),
