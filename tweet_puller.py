@@ -29,8 +29,8 @@ def get_tweets():
     
     api = tweepy.API(auth,wait_on_rate_limit=True)
     
-    csvFile = open('falo.csv', 'a')
-    csvWriter = csv.writer(csvFile)
+    # csvFile = open('falo.csv', 'a')
+    # csvWriter = csv.writer(csvFile)
     
     search_words = "Election Trump -filter:retweets"      # enter your words
     
@@ -63,11 +63,16 @@ def get_tweets():
                 "favourite_count": tweet.favorite_count,
                 "retweet_count": tweet.retweet_count
             }]
-        y = json.dumps(tweets_pulled)
-        print(y)
         # new_tweet = clean_tweet(tweet.full_text)
         # #csvWriter.writerow([tweet.created_at, tweet.text.encode('utf-8'),tweet.user.screen_name.encode('utf-8'), tweet.user.location.encode('utf-8')])
         # csvWriter.writerow([new_tweet])
+    
+    # y = json.dumps(tweets_pulled)
+    # print(y)
+
+    with open('tweets.json', 'w') as json_file:
+        json.dump(tweets_pulled, json_file)
+
 
 if __name__ == '__main__':
 	get_tweets()
