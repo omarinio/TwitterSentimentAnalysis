@@ -1,6 +1,6 @@
 import tweepy
 import sys
-
+import re
 # Twitter API credentials
 # You need to go to https://apps.twitter.com/ to get your own keys for this script
 # to function
@@ -8,6 +8,16 @@ consumer_key = "6pmQIyPl8zUDysbGcWtzvEumf"
 consumer_secret = "LBL97jh7O0V7Hh3oOeogZ5t1DWUy1idnPbIKUt6isewcyfVeIi"
 access_key= "1046797250301763586-J6O0EjmFY9nkIWGoDISMiM64FWNaEL"
 access_secret = "qBEsWvFHJpLRgQ24oZ9EPVJ8eMFkEz7y3QopzQ6nnt07H"
+
+def clean_tweet(tweet):
+    tweet = re.sub("https?://", "", tweet)   #links
+    tweet = re.sub("#\S+", "", tweet)           #hashtags
+    tweet = re.sub(".?@", "", tweet)           #at mentions
+    tweet = re.sub("RT.+", "", tweet)           #Retweets
+    tweet = re.sub("Video:", "", tweet)        #Videos
+    tweet = re.sub("\n", "", tweet)             #new lines
+    tweet = re.sub("&", "and", tweet)       #encoded ampersands
+    return tweet
 
 def get_tweets(user_name):
 	# Authorize twitter API and initialize tweepy
@@ -26,8 +36,8 @@ def get_tweets(user_name):
 		return
 
 	# This file will store the user's tweets. It will be named with their username.
-	filename = "textfiles/"+ user_name + ".txt"
-	file = open(filename, 'w')
+	filename = "textfiles/"+ user_name + ".csv"
+	file = open(filename, 'w', encoding="utf-8")
 	
 	# These lines do several things: It first gets the next tweet from the list. 
 	# It then replaces any new line characters in the string with spaces. This prevents our generator
@@ -35,8 +45,8 @@ def get_tweets(user_name):
 	# spaces at the start or end of the string. The line is then written to output file.
 	# A new line is then added to the end of every tweet in the file.
 	for x in range (0, len(list_of_tweets)):
-		file.write(list_of_tweets[x].full_text.replace('\n'," ").strip())
-		file.write("\n")
+		file.write(clean_tweet(list_of_tweets[x].full_text.replace('\n'," ").strip()))
+		file.write(",\n")
 		
 	file.close()
 
