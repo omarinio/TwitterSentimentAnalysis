@@ -34,24 +34,36 @@ def get_tweets():
     
     search_words = "Election Trump -filter:retweets"      # enter your words
     
+    tweets_pulled = {}
+
     for tweet in tweepy.Cursor(api.search,q=search_words,
                             lang="en",
                             since_id=0,
-                            tweet_mode="extended").items(1):
-        tweet_info = {
-            "username": tweet.user.screen_name,
-            "tweet": {
-                        "user_name": tweet.user.name,
-                        "created_at": str(tweet.created_at),
-                        "text": tweet.full_text,
-                        "user_location": tweet.user.location,
-                        "user_followers_count": tweet.user.followers_count,
-                        "user_created_at": str(tweet.user.created_at),
-                        "favourite_count": tweet.favorite_count,
-                        "retweet_count": tweet.retweet_count
-            }
-        }
-        y = json.dumps(tweet_info)
+                            tweet_mode="extended").items(100):
+
+        if tweets_pulled.get(tweet.user.screen_name) != None:
+            tweets_pulled[tweet.user.screen_name].append({
+                "user_name": tweet.user.name,
+                "created_at": str(tweet.created_at),
+                "text": tweet.full_text,
+                "user_location": tweet.user.location,
+                "user_followers_count": tweet.user.followers_count,
+                "user_created_at": str(tweet.user.created_at),
+                "favourite_count": tweet.favorite_count,
+                "retweet_count": tweet.retweet_count
+            })
+        else:
+            tweets_pulled[tweet.user.screen_name] = [{
+                "user_name": tweet.user.name,
+                "created_at": str(tweet.created_at),
+                "text": tweet.full_text,
+                "user_location": tweet.user.location,
+                "user_followers_count": tweet.user.followers_count,
+                "user_created_at": str(tweet.user.created_at),
+                "favourite_count": tweet.favorite_count,
+                "retweet_count": tweet.retweet_count
+            }]
+        y = json.dumps(tweets_pulled)
         print(y)
         # new_tweet = clean_tweet(tweet.full_text)
         # #csvWriter.writerow([tweet.created_at, tweet.text.encode('utf-8'),tweet.user.screen_name.encode('utf-8'), tweet.user.location.encode('utf-8')])
