@@ -20,8 +20,18 @@ from keys import *
 # favorite_count
 # retweet_count
 
+# def clean_tweet(tweet):
+#     return " ".join(re.sub("([^0-9A-Za-z \t])|(\w+:\/\/\S+)", "", tweet).split())
+
 def clean_tweet(tweet):
-    return " ".join(re.sub("([^0-9A-Za-z \t])|(\w+:\/\/\S+)", "", tweet).split())
+    # retweet cleaning
+    tweet = re.sub("RT @[\w]*:", '', tweet)
+    # twitter handle removal
+    tweet = re.sub("@[\w]*", '', tweet)
+    # URL removal
+    tweet = re.sub("https?://[A-Za-z0-9./]*", '', tweet)
+
+    return tweet
  
 def get_tweets():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
