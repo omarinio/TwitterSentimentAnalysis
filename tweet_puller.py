@@ -30,6 +30,8 @@ def clean_tweet(tweet):
     tweet = re.sub("@[\w]*", '', tweet)
     # URL removal
     tweet = re.sub("https?://[A-Za-z0-9./]*", '', tweet)
+    # ampersand converted to and
+    tweet = re.sub("&", 'and', tweet)
 
     return tweet
  
