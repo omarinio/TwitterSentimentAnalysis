@@ -50,28 +50,39 @@ def read_csv(lines):
 
         return data
 
-def get_user_loc(data):
+def get_user_loc(user):
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_key, access_secret)
-
     api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
 
-    i = 0
+    try:
+        user_info = api.get_user(user_id=user)
+        if (user_info.location != ""):
+            user_loc = user_info.location
+        else:
+            user_loc = None
+    except:
+        user_loc = None
+            
+    
+    return user_loc
 
+def remove_null_locations(data):
+    cleaned_data = {}
     for user in data:
-        i += 1
-        try:
-            user_info = api.get_user(user_id=user)
-            #print(f"User {i}")
-            if (user_info.location != ""):
-                print(user_info.location)
-            else:
-                print("Empty location")
-        except:
-            print(f"User {i} suspended")
-
+        user_loc = get_user_loc(user)
+        if (user_loc != None):
+            for tweet in data[user]:
+                if cleaned_data.get(user) != None:
+                    cleaned_data[user].append(tweet)
+                else:
+                    cleaned_data[user] = tweet
+            
+    return cleaned_data
 
 if __name__ == "__main__":
     num_tweets = 10
     data = read_csv(num_tweets)
-    get_user_loc(data)
+    cleaned_data = remove_null_locations(data)
+            
+    print(len(cleaned_data))
