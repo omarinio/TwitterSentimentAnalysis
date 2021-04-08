@@ -105,26 +105,43 @@ def read_json():
     return data
 
 def get_sentiment_val(state_abbr, state_name, data):
-    tweets_from_loc = 0
-    total_positive = 0
-    total_negative = 0 
-    total_neutral = 0
+    dem_tweets = 0
+    dem_positive = 0
+    dem_negative = 0 
+    dem_neutral = 0
+    dem_swing = None
+    rep_tweets = 0
+    rep_positive = 0
+    rep_negative = 0 
+    rep_neutral = 0
+    rep_swing = None
     for user in data:
         for tweet in data[user]:
             if (state_abbr in tweet['location'] or state_name in tweet['location']):
-                tweets_from_loc += 1
-                if (float(tweet['sentiment_score'][0]) > 0):
-                    total_positive += 1
-                elif (float(tweet['sentiment_score'][0]) < 0):
-                    total_negative += 1
-                else:
-                    total_neutral += 1
-    if not (tweets_from_loc == 0):
-        swing = (total_positive - total_negative) / (tweets_from_loc / 100)                
-        print(state_abbr + " " + state_name)
-        print(f"Total tweets from state: {tweets_from_loc}")
-        print(f"Swing: {swing}")
-    return tweets_from_loc
+                if (tweet['party_name'][0] == "Democrats"):
+                    dem_tweets += 1
+                    if (float(tweet['sentiment_score'][0]) > 0):
+                        dem_positive += 1
+                    elif (float(tweet['sentiment_score'][0]) < 0):
+                        dem_negative += 1
+                    else:
+                        dem_neutral += 1
+                elif (tweet['party_name'][0] == "Republicans"):
+                    rep_tweets += 1
+                    if (float(tweet['sentiment_score'][0]) > 0):
+                        rep_positive += 1
+                    elif (float(tweet['sentiment_score'][0]) < 0):
+                        rep_negative += 1
+                    else:
+                        rep_neutral += 1
+    if not (dem_tweets == 0 or rep_tweets == 0):
+        dem_swing = (dem_positive - dem_negative) / (dem_tweets / 100)
+        rep_swing = (rep_positive - rep_negative) / (rep_tweets / 100)
+        tweets_from_loc = dem_tweets + rep_tweets                   
+        print(f"{state_name}: {tweets_from_loc} tweets")
+    else:
+        print(f"{state_name}: No tweets")
+    return dem_swing, rep_swing
 
 if __name__ == "__main__":
     #This set of functions gets a certain number of tweets and cleans them based on user locations then writes to JSON
@@ -135,12 +152,12 @@ if __name__ == "__main__":
     write_json(cleaned_data)
     """
     #This set of functions reads the earlier produced JSON and produces a sentiment score for each party within each state
-    total_tweets = 0
     data = read_json()
+
     for state_abbr, state_name in states.items():
-        tweets_from_loc = get_sentiment_val(state_abbr, state_name, data)
-        total_tweets += tweets_from_loc
-    print(f"Total tweets: {total_tweets}")
+        dem_swing, rep_swing = get_sentiment_val(state_abbr, state_name, data)
+        print(f"Democrat swing: {dem_swing}")
+        print(f"Republican swing: {rep_swing}")
     
 
 
