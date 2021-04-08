@@ -91,12 +91,6 @@ def remove_null_locations(data):
        
     return cleaned_data
 
-"""
-def split_locations(cleaned_data):
-    for user in cleaned_data:
-        for tweet in
-""" 
-
 def write_json(cleaned_data):
     with open(f'tweets/cleaned_tweets.json', 'w') as json_file:
             json.dump(cleaned_data, json_file)
@@ -110,40 +104,44 @@ def read_json():
     
     return data
 
-
+def get_sentiment_val(state_abbr, state_name, data):
+    tweets_from_loc = 0
+    total_positive = 0
+    total_negative = 0 
+    total_neutral = 0
+    for user in data:
+        for tweet in data[user]:
+            if (state_abbr in tweet['location'] or state_name in tweet['location']):
+                tweets_from_loc += 1
+                if (float(tweet['sentiment_score'][0]) > 0):
+                    total_positive += 1
+                elif (float(tweet['sentiment_score'][0]) < 0):
+                    total_negative += 1
+                else:
+                    total_neutral += 1
+    if not (tweets_from_loc == 0):
+        swing = (total_positive - total_negative) / (tweets_from_loc / 100)                
+        print(state_abbr + " " + state_name)
+        print(f"Total tweets from state: {tweets_from_loc}")
+        print(f"Swing: {swing}")
+    return tweets_from_loc
 
 if __name__ == "__main__":
     #This set of functions gets a certain number of tweets and cleans them based on user locations then writes to JSON
     """
-    num_tweets = 1000
+    num_tweets = 10000
     data = read_csv(num_tweets)
     cleaned_data = remove_null_locations(data)
     write_json(cleaned_data)
     """
-    
     #This set of functions reads the earlier produced JSON and produces a sentiment score for each party within each state
-    
-    data = read_json()
-    #analyzer = SentimentIntensityAnalyzer()
     total_tweets = 0
+    data = read_json()
     for state_abbr, state_name in states.items():
-        tweets_from_loc = 0
-        vader_positive = 0
-        vader_negative = 0 
-        vader_neutral = 0
-        for user in data:
-            for tweet in data[user]:
-                #print(tweet)
-                if (state_abbr in tweet['location'] or state_name in tweet['location']):
-                    tweets_from_loc += 1
-                    
+        tweets_from_loc = get_sentiment_val(state_abbr, state_name, data)
         total_tweets += tweets_from_loc
-        if not (tweets_from_loc == 0):
-            #vader_swing = (vader_positive - vader_negative) / (tweets_from_loc / 100)                
-            print(state_abbr + " " + state_name)
-            print(f"Total tweets from state: {tweets_from_loc}")
-            #print(f"Vader swing: {vader_swing}")
     print(f"Total tweets: {total_tweets}")
+    
 
 
             
