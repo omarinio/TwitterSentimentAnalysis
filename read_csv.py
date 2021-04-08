@@ -1,6 +1,9 @@
 import csv
+import json
 import tweepy
 from keys import *
+from states import *
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 def read_csv(lines):
     data = {}
@@ -69,20 +72,78 @@ def get_user_loc(user):
 
 def remove_null_locations(data):
     cleaned_data = {}
+    i = 0
     for user in data:
+        i += 1
+        print(f"User {i}")
         user_loc = get_user_loc(user)
         if (user_loc != None):
-            for tweet in data[user]:
-                if cleaned_data.get(user) != None:
-                    cleaned_data[user].append(tweet)
-                else:
-                    cleaned_data[user] = tweet
-            
+            print(user_loc)
+            for state_abbr, state_name in states.items():
+                if (state_abbr in user_loc or state_name in user_loc):
+                    for tweet in data[user]:
+                        tweet['location'] = user_loc
+                        if cleaned_data.get(user) != None:
+                            print(">1 tweet from same user")
+                            cleaned_data[user].append(tweet)
+                        else:
+                            cleaned_data[user] = [tweet]
+       
     return cleaned_data
 
+"""
+def split_locations(cleaned_data):
+    for user in cleaned_data:
+        for tweet in
+""" 
+
+def write_json(cleaned_data):
+    with open(f'tweets/cleaned_tweets.json', 'w') as json_file:
+            json.dump(cleaned_data, json_file)
+
+def read_json():
+    try:
+        with open("tweets/cleaned_tweets.json") as json_file:
+            data = json.load(json_file)
+    except:
+        print("Could not read JSON file")
+    
+    return data
+
+
+
 if __name__ == "__main__":
-    num_tweets = 10
+    #This set of functions gets a certain number of tweets and cleans them based on user locations then writes to JSON
+    """
+    num_tweets = 1000
     data = read_csv(num_tweets)
     cleaned_data = remove_null_locations(data)
+    write_json(cleaned_data)
+    """
+    
+    #This set of functions reads the earlier produced JSON and produces a sentiment score for each party within each state
+    
+    data = read_json()
+    #analyzer = SentimentIntensityAnalyzer()
+    total_tweets = 0
+    for state_abbr, state_name in states.items():
+        tweets_from_loc = 0
+        vader_positive = 0
+        vader_negative = 0 
+        vader_neutral = 0
+        for user in data:
+            for tweet in data[user]:
+                #print(tweet)
+                if (state_abbr in tweet['location'] or state_name in tweet['location']):
+                    tweets_from_loc += 1
+                    
+        total_tweets += tweets_from_loc
+        if not (tweets_from_loc == 0):
+            #vader_swing = (vader_positive - vader_negative) / (tweets_from_loc / 100)                
+            print(state_abbr + " " + state_name)
+            print(f"Total tweets from state: {tweets_from_loc}")
+            #print(f"Vader swing: {vader_swing}")
+    print(f"Total tweets: {total_tweets}")
+
+
             
-    print(len(cleaned_data))
