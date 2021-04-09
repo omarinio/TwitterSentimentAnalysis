@@ -7,8 +7,8 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 def read_csv(lines):
     data = {}
-
-    with open('hashtag_donaldtrump.csv', encoding='utf-8') as csv_file:
+    file_path = 'hashtag_joebiden.csv'
+    with open(file_path, encoding='utf-8') as csv_file:
         reader = csv.reader(csv_file, delimiter=',')
         print(csv_file)
         line_count = 0
@@ -112,8 +112,11 @@ def remove_null_locations(data):
     return cleaned_data
 
 def write_json(cleaned_data):
-    with open(f'tweets/cleaned_tweets2.json', 'w') as json_file:
+    try:
+        with open(f'tweets/biden_cleaned_tweets.json', 'w') as json_file:
             json.dump(cleaned_data, json_file)
+    except:
+        print("Could not write to JSON file")
 
 def read_json():
     try:
@@ -165,9 +168,10 @@ def get_sentiment_val(state_abbr, state_name, data):
 
 if __name__ == "__main__":
     #This set of functions gets a certain number of tweets and cleans them based on user locations then writes to JSON
+    trump_tweets = 971158
+    biden_tweets = 777079
     
-    num_tweets = 971158
-    data = read_csv(num_tweets)
+    data = read_csv(biden_tweets)
     # cleaned_data = remove_null_locations(data)
     write_json(data)
 
