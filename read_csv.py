@@ -94,7 +94,7 @@ def remove_null_locations(data):
 
 def write_json(cleaned_data):
     try:
-        with open('sentiment/biden_swing_values.json', 'w') as json_file:
+        with open('sentiment/avg_trump_swing_values.json', 'w') as json_file:
             json.dump(cleaned_data, json_file)
         print("Successfully wrote to JSON file")
     except Exception as e:
@@ -102,7 +102,7 @@ def write_json(cleaned_data):
 
 def read_json():
     try:
-        with open("tweets/biden_cleaned_tweets.json") as json_file:
+        with open("tweets/trump_cleaned_tweets.json") as json_file:
             data = json.load(json_file)
         print("Successfully read JSON file")
     except Exception as e:
@@ -112,6 +112,7 @@ def read_json():
 
 def get_sentiment_val(state_abbr, state_name, data):
     tweets_from_loc = 0
+    total_sentiment = 0
     positive = 0
     negative = 0
     neutral = 0
@@ -124,14 +125,18 @@ def get_sentiment_val(state_abbr, state_name, data):
             if (state_abbr in tweet['state_code'] or state_name in tweet['state']):
                 vs = analyzer.polarity_scores(tweet['tweet'])
                 tweets_from_loc += 1
+                total_sentiment += vs['compound']
+                """
                 if (vs['compound'] > 0):
                     positive += 1
                 elif (vs['compound'] < 0):
                     negative += 1
                 else:
                     neutral += 1
+                """
     if not (tweets_from_loc == 0):
-        swing = (positive - negative) / (tweets_from_loc / 100)                  
+        swing = total_sentiment / (tweets_from_loc)
+        #swing = (positive - negative) / (tweets_from_loc)                  
         print(f"{state_name}: {tweets_from_loc} tweets")
     else:
         print(f"{state_name}: No tweets")
