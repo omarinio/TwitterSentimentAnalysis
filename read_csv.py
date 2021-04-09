@@ -7,7 +7,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 def read_csv(lines):
     data = {}
-    file_path = 'hashtag_joebiden.csv'
+    file_path = 'hashtag_donaldtrump.csv'
     with open(file_path, encoding='utf-8') as csv_file:
         reader = csv.reader(csv_file, delimiter=',')
         print(csv_file)
@@ -38,7 +38,7 @@ def read_csv(lines):
                             "long": tweet[14:15],
                             "city": tweet[15:16],
                             "country": tweet[16:17],
-                            "continent": tweet[17:18]
+                            "continent": tweet[17:18],
                             "state": tweet[18:19],
                             "state_code": tweet[19:20],
                             "collected_at": tweet[20:21]
@@ -62,7 +62,7 @@ def read_csv(lines):
                             "long": tweet[14:15],
                             "city": tweet[15:16],
                             "country": tweet[16:17],
-                            "continent": tweet[17:18]
+                            "continent": tweet[17:18],
                             "state": tweet[18:19],
                             "state_code": tweet[19:20],
                             "collected_at": tweet[20:21]
@@ -77,90 +77,65 @@ def read_csv(lines):
 
 def remove_null_locations(data):
     cleaned_data = {}
-    i = 0
-    """
     for user in data:
-        i += 1
-        print(f"User {i}")
-        if (user_loc != None):
-            print(user_loc)
-            for state_abbr, state_name in states.items():
-                if (state_abbr in user_loc or state_name in user_loc):
-                    for tweet in data[user]:
-                        tweet['location'] = user_loc
+        for tweet in data[user]:
+            user_state_code = tweet['state_code']
+            user_state_name = tweet['state']
+            if (user_state_name != None or user_state_code != None):
+                for state_abbr, state_name in states.items():
+                    if (state_abbr in user_state_code and state_name in user_state_name):
                         if cleaned_data.get(user) != None:
                             print(">1 tweet from same user")
                             cleaned_data[user].append(tweet)
                         else:
                             cleaned_data[user] = [tweet]
-    """
-    total_valid = 0
-    for user in data:
-        for tweet in data[user]:
-            user_loc = tweet['country']
-            print(user_loc)
-            if (user_loc != None):
-                for state_abbr, state_name in states.items():
-                    if (state_abbr in user_loc or state_name in user_loc):
-                        total_valid += 1
 
-    print(total_valid)
     return cleaned_data
 
 def write_json(cleaned_data):
     try:
-        with open(f'tweets/biden_cleaned_tweets.json', 'w') as json_file:
+        with open('sentiment/biden_swing_values.json', 'w') as json_file:
             json.dump(cleaned_data, json_file)
-    except:
-        print("Could not write to JSON file")
+        print("Successfully wrote to JSON file")
+    except Exception as e:
+        print(e)
 
 def read_json():
     try:
-        with open("tweets/cleaned_tweets2.json") as json_file:
+        with open("tweets/biden_cleaned_tweets.json") as json_file:
             data = json.load(json_file)
-    except:
-        print("Could not read JSON file")
+        print("Successfully read JSON file")
+    except Exception as e:
+        print(e)
     
     return data
 
 def get_sentiment_val(state_abbr, state_name, data):
-    dem_tweets = 0
-    dem_positive = 0
-    dem_negative = 0 
-    dem_neutral = 0
-    dem_swing = None
-    rep_tweets = 0
-    rep_positive = 0
-    rep_negative = 0 
-    rep_neutral = 0
-    rep_swing = None
+    tweets_from_loc = 0
+    positive = 0
+    negative = 0
+    neutral = 0
+    swing = None
+
+    analyzer = SentimentIntensityAnalyzer()
+
     for user in data:
         for tweet in data[user]:
-            if (state_abbr in tweet['location'] or state_name in tweet['location']):
-                if (tweet['party_name'][0] == "Democrats"):
-                    dem_tweets += 1
-                    if (float(tweet['sentiment_score'][0]) > 0):
-                        dem_positive += 1
-                    elif (float(tweet['sentiment_score'][0]) < 0):
-                        dem_negative += 1
-                    else:
-                        dem_neutral += 1
-                elif (tweet['party_name'][0] == "Republicans"):
-                    rep_tweets += 1
-                    if (float(tweet['sentiment_score'][0]) > 0):
-                        rep_positive += 1
-                    elif (float(tweet['sentiment_score'][0]) < 0):
-                        rep_negative += 1
-                    else:
-                        rep_neutral += 1
-    if not (dem_tweets == 0 or rep_tweets == 0):
-        dem_swing = (dem_positive - dem_negative) / (dem_tweets / 100)
-        rep_swing = (rep_positive - rep_negative) / (rep_tweets / 100)
-        tweets_from_loc = dem_tweets + rep_tweets                   
+            if (state_abbr in tweet['state_code'] or state_name in tweet['state']):
+                vs = analyzer.polarity_scores(tweet['tweet'])
+                tweets_from_loc += 1
+                if (vs['compound'] > 0):
+                    positive += 1
+                elif (vs['compound'] < 0):
+                    negative += 1
+                else:
+                    neutral += 1
+    if not (tweets_from_loc == 0):
+        swing = (positive - negative) / (tweets_from_loc / 100)                  
         print(f"{state_name}: {tweets_from_loc} tweets")
     else:
         print(f"{state_name}: No tweets")
-    return dem_swing, rep_swing
+    return swing
 
 if __name__ == "__main__":
     #This set of functions gets a certain number of tweets and cleans them based on user locations then writes to JSON
@@ -168,17 +143,24 @@ if __name__ == "__main__":
     biden_tweets = 777079
     test_tweets = 100
     
-    data = read_csv(test_tweets)
+    """
+    data = read_csv(trump_tweets)
     cleaned_data = remove_null_locations(data)
     write_json(data)
+    """
 
     #This set of functions reads the earlier produced JSON and produces a sentiment score for each party within each state
-    # data = read_json()
+    
+    data = read_json()
+    state_swing = {}
 
-    # for state_abbr, state_name in states.items():
-    #     dem_swing, rep_swing = get_sentiment_val(state_abbr, state_name, data)
-    #     print(f"Democrat swing: {dem_swing}")
-    #     print(f"Republican swing: {rep_swing}")
+    for state_abbr, state_name in states.items():
+        swing = get_sentiment_val(state_abbr, state_name, data)
+        state_swing[state_abbr] = swing
+
+    write_json(state_swing)
+
+    
     
 
 
