@@ -8,43 +8,63 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 def read_csv(lines):
     data = {}
 
-    with open('uselection_tweets_1jul_11nov.csv') as csv_file:
-        reader = csv.reader(csv_file, delimiter=';')
+    with open('hashtag_donaldtrump.csv', encoding='utf-8') as csv_file:
+        reader = csv.reader(csv_file, delimiter=',')
+        print(csv_file)
         line_count = 0
         for tweet in reader:
             if line_count == 0:
                 print(f'Column names are {", ".join(tweet)}')
                 line_count += 1
             elif line_count <= lines:
-                user_id = tweet[1:2]
-                if data.get(user_id[0]) != None:
-                    data[user_id[0]].append({
-                        "created_at": tweet[0:1],
-                        "from_user_id": tweet[1:2],
-                        "to_user_id": tweet[2:3],
-                        "language": tweet[3:4],
-                        "retweet_count": tweet[4:5],
-                        "party_name": tweet[5:6],
-                        "tweet_id": tweet[6:7],
-                        "sentiment_score": tweet[7:8],
-                        "words": tweet[8:9],
-                        "negative_sum": tweet[9:10],
-                        "positive_sum": tweet[10:11]
-                    })
-                else:
-                    data[user_id[0]] = [{
-                        "created_at": tweet[0:1],
-                        "from_user_id": tweet[1:2],
-                        "to_user_id": tweet[2:3],
-                        "language": tweet[3:4],
-                        "retweet_count": tweet[4:5],
-                        "party_name": tweet[5:6],
-                        "tweet_id": tweet[6:7],
-                        "sentiment_score": tweet[7:8],
-                        "words": tweet[8:9],
-                        "negative_sum": tweet[9:10],
-                        "positive_sum": tweet[10:11]
-                    }]
+                user_id = tweet[6:7]
+                if user_id:
+                    if data.get(user_id[0]) != None:
+                        data[user_id[0]].append({
+                            "created_at": tweet[0:1],
+                            "tweet_id": tweet[1:2],
+                            "tweet": tweet[2:3],
+                            "likes": tweet[3:4],
+                            "retweet_count": tweet[4:5],
+                            "source": tweet[5:6],
+                            "user_id": tweet[6:7],
+                            "user_name": tweet[7:8],
+                            "user_screen_name": tweet[8:9],
+                            "user_description": tweet[9:10],
+                            "user_join_date": tweet[10:11],
+                            "user_followers_count": tweet[11:12],
+                            "user_location": tweet[12:13],
+                            "lat": tweet[13:14],
+                            "long": tweet[14:15],
+                            "city": tweet[15:16],
+                            "country": tweet[16:17],
+                            "state": tweet[17:18],
+                            "state_code": tweet[18:19],
+                            "collected_at": tweet[19:20]
+                        })
+                    else:
+                        data[user_id[0]] = [{
+                            "created_at": tweet[0:1],
+                            "tweet_id": tweet[1:2],
+                            "tweet": tweet[2:3],
+                            "likes": tweet[3:4],
+                            "retweet_count": tweet[4:5],
+                            "source": tweet[5:6],
+                            "user_id": tweet[6:7],
+                            "user_name": tweet[7:8],
+                            "user_screen_name": tweet[8:9],
+                            "user_description": tweet[9:10],
+                            "user_join_date": tweet[10:11],
+                            "user_followers_count": tweet[11:12],
+                            "user_location": tweet[12:13],
+                            "lat": tweet[13:14],
+                            "long": tweet[14:15],
+                            "city": tweet[15:16],
+                            "country": tweet[16:17],
+                            "state": tweet[17:18],
+                            "state_code": tweet[18:19],
+                            "collected_at": tweet[19:20]
+                        }]
                 line_count += 1
             elif line_count > lines:
                 break
@@ -92,12 +112,12 @@ def remove_null_locations(data):
     return cleaned_data
 
 def write_json(cleaned_data):
-    with open(f'tweets/cleaned_tweets.json', 'w') as json_file:
+    with open(f'tweets/cleaned_tweets2.json', 'w') as json_file:
             json.dump(cleaned_data, json_file)
 
 def read_json():
     try:
-        with open("tweets/cleaned_tweets.json") as json_file:
+        with open("tweets/cleaned_tweets2.json") as json_file:
             data = json.load(json_file)
     except:
         print("Could not read JSON file")
@@ -145,19 +165,20 @@ def get_sentiment_val(state_abbr, state_name, data):
 
 if __name__ == "__main__":
     #This set of functions gets a certain number of tweets and cleans them based on user locations then writes to JSON
-    """
+    
     num_tweets = 10000
     data = read_csv(num_tweets)
-    cleaned_data = remove_null_locations(data)
-    write_json(cleaned_data)
-    """
-    #This set of functions reads the earlier produced JSON and produces a sentiment score for each party within each state
-    data = read_json()
+    print(data)
+    # cleaned_data = remove_null_locations(data)
+    write_json(data)
 
-    for state_abbr, state_name in states.items():
-        dem_swing, rep_swing = get_sentiment_val(state_abbr, state_name, data)
-        print(f"Democrat swing: {dem_swing}")
-        print(f"Republican swing: {rep_swing}")
+    #This set of functions reads the earlier produced JSON and produces a sentiment score for each party within each state
+    # data = read_json()
+
+    # for state_abbr, state_name in states.items():
+    #     dem_swing, rep_swing = get_sentiment_val(state_abbr, state_name, data)
+    #     print(f"Democrat swing: {dem_swing}")
+    #     print(f"Republican swing: {rep_swing}")
     
 
 
