@@ -38,9 +38,10 @@ def read_csv(lines):
                             "long": tweet[14:15],
                             "city": tweet[15:16],
                             "country": tweet[16:17],
-                            "state": tweet[17:18],
-                            "state_code": tweet[18:19],
-                            "collected_at": tweet[19:20]
+                            "continent": tweet[17:18]
+                            "state": tweet[18:19],
+                            "state_code": tweet[19:20],
+                            "collected_at": tweet[20:21]
                         })
                     else:
                         data[user_id[0]] = [{
@@ -61,9 +62,10 @@ def read_csv(lines):
                             "long": tweet[14:15],
                             "city": tweet[15:16],
                             "country": tweet[16:17],
-                            "state": tweet[17:18],
-                            "state_code": tweet[18:19],
-                            "collected_at": tweet[19:20]
+                            "continent": tweet[17:18]
+                            "state": tweet[18:19],
+                            "state_code": tweet[19:20],
+                            "collected_at": tweet[20:21]
                         }]
                 line_count += 1
             elif line_count > lines:
@@ -73,30 +75,13 @@ def read_csv(lines):
 
         return data
 
-def get_user_loc(user):
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
-
-    try:
-        user_info = api.get_user(user_id=user)
-        if (user_info.location != ""):
-            user_loc = user_info.location
-        else:
-            user_loc = None
-    except:
-        user_loc = None
-            
-    
-    return user_loc
-
 def remove_null_locations(data):
     cleaned_data = {}
     i = 0
+    """
     for user in data:
         i += 1
         print(f"User {i}")
-        user_loc = get_user_loc(user)
         if (user_loc != None):
             print(user_loc)
             for state_abbr, state_name in states.items():
@@ -108,7 +93,18 @@ def remove_null_locations(data):
                             cleaned_data[user].append(tweet)
                         else:
                             cleaned_data[user] = [tweet]
-       
+    """
+    total_valid = 0
+    for user in data:
+        for tweet in data[user]:
+            user_loc = tweet['country']
+            print(user_loc)
+            if (user_loc != None):
+                for state_abbr, state_name in states.items():
+                    if (state_abbr in user_loc or state_name in user_loc):
+                        total_valid += 1
+
+    print(total_valid)
     return cleaned_data
 
 def write_json(cleaned_data):
@@ -170,9 +166,10 @@ if __name__ == "__main__":
     #This set of functions gets a certain number of tweets and cleans them based on user locations then writes to JSON
     trump_tweets = 971158
     biden_tweets = 777079
+    test_tweets = 100
     
-    data = read_csv(biden_tweets)
-    # cleaned_data = remove_null_locations(data)
+    data = read_csv(test_tweets)
+    cleaned_data = remove_null_locations(data)
     write_json(data)
 
     #This set of functions reads the earlier produced JSON and produces a sentiment score for each party within each state

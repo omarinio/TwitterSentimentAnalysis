@@ -1,8 +1,7 @@
-
 keys.py
 *.csv
-tweets/
 
+tweets/
 __pycache__/
 
 US-Election-Data
