@@ -120,7 +120,7 @@ def write_json(cleaned_data):
 
 def read_json():
     try:
-        with open("tweets/cleaned_tweets2.json") as json_file:
+        with open("tweets/trump_tweets.json") as json_file:
             data = json.load(json_file)
     except:
         print("Could not read JSON file")
