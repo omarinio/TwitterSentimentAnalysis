@@ -166,9 +166,8 @@ def get_sentiment_val(state_abbr, state_name, data):
 if __name__ == "__main__":
     #This set of functions gets a certain number of tweets and cleans them based on user locations then writes to JSON
     
-    num_tweets = 10000
+    num_tweets = 971158
     data = read_csv(num_tweets)
-    print(data)
     # cleaned_data = remove_null_locations(data)
     write_json(data)
 

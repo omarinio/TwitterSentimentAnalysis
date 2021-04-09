@@ -1,6 +1,7 @@
 
 keys.py
 *.csv
+tweets/
 
 __pycache__/
 
