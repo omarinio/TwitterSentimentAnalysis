@@ -4,14 +4,19 @@ import json
 import re
 from collections import Counter
 import wordcloud
+import matplotlib.pyplot as plt
 
 # C:\Users\Omar\AppData\Local\Programs\Python\Python38\Lib\site-packages\vaderSentiment
 
-def generate_word_cloud(word_list):
-    wc = wordcloud.WordCloud(background_color='white', max_words=300, collocations=False, max_font_size=40, random_state=42)
+def generate_word_cloud(word_list, filename):
+    wc = wordcloud.WordCloud(width=1600, height=800)
     wc=wc.generate(" ".join(word_list).lower())
+    plt.figure(figsize=(20,10), facecolor='k')
+    plt.imshow(wc)
+    plt.axis("off")
     # save the wordcloud
-    wc.to_file('wordcloud.png')
+    plt.savefig(f'wordclouds/{filename}_biden.png', facecolor='k', bbox_inches='tight')
+    #wc.to_file(f'wordclouds/{filename}_biden.png')
 
 def clean_tweet(tweet):
     # retweet cleaning
@@ -23,6 +28,9 @@ def clean_tweet(tweet):
     tweet = re.sub("&", "and", tweet)
 
     return tweet
+
+def remove_duplicates(x):
+    return list(dict.fromkeys(x))
 
 if __name__ == "__main__":
     analyzer = SentimentIntensityAnalyzer()
@@ -37,10 +45,11 @@ if __name__ == "__main__":
             #print(vs)
             for word in cleaned_tweet.split(' '):
                 word = word.replace('\n', ' ').replace('\xa0',' ').replace('.',' ').replace('·', ' ').replace('•',' ').replace('\t', ' ').replace(',',' ').replace('-', ' ').replace(':', ' ').replace('/',' ').replace('*',' ')
-                if analyzer.polarity_scores(word)['compound'] > 0.05:
-                    pos.append(word)
-                elif analyzer.polarity_scores(word)['compound'] < -0.05:
-                    neg.append(word)
+                for w in word.split(' '):
+                    if analyzer.polarity_scores(w)['compound'] > 0.05:
+                        pos.append(w)
+                    elif analyzer.polarity_scores(w)['compound'] < -0.05:
+                        neg.append(w)
 
     counter_pos = Counter(pos)
     counter_neg = Counter(neg) 
@@ -53,8 +62,9 @@ if __name__ == "__main__":
     f2 = open("neg.json", "w")
     f2.write(json_neg)
     f2.close()
-    generate_word_cloud(pos)
-    generate_word_cloud(neg)
+
+    generate_word_cloud(pos, 'positive')
+    generate_word_cloud(neg, 'negative')
 
 # vs = analyzer.polarity_scores("i am a corrupt bastard")
 # pos = []
