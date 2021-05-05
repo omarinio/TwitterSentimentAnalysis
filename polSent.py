@@ -33,6 +33,8 @@ def findAverageScore(tweet, h):
     for tok in tokenList:
         if tok in h:
             sum += h[tok]
+        else:
+            tokenList.remove
     
     return sum/len(tokenList)
 
