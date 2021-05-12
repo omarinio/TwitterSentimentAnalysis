@@ -8,8 +8,6 @@ import wordcloud
 import matplotlib.pyplot as plt
 import polSent as ps
 
-# C:\Users\Omar\AppData\Local\Programs\Python\Python38\Lib\site-packages\vaderSentiment
-
 def generate_word_cloud(word_list, filename, candidate):
     wc = wordcloud.WordCloud(width=1600, height=800, collocations = False)
     wc=wc.generate(" ".join(word_list).lower())
