@@ -5,6 +5,7 @@ import re
 from collections import Counter
 import wordcloud
 import matplotlib.pyplot as plt
+import polSent as ps
 
 # C:\Users\Omar\AppData\Local\Programs\Python\Python38\Lib\site-packages\vaderSentiment
 
@@ -77,3 +78,17 @@ if __name__ == "__main__":
 
 #     print(pos)
 #     print(neg)
+with open("tweets.json") as json_file:
+    data = json.load(json_file)
+    listoftexts = [data[user][0]['text'] for user in data]
+    vss = ps.analyse(listoftexts)
+    i=0
+
+    for i in range(0, vss.shape[0]):
+        print(vss['tweet'][i])
+        print(vss['score'][i])
+        print("\n")
+        print("\n")
+    
+
+    
