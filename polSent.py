@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 
+lex = pd.read_csv("politics.tsv",sep='\t')
+
 #removes all but latin leters
 def filterNonLatin(myStr):
     whitelist = set('abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
@@ -17,6 +19,8 @@ def createHash(lex):
         h[lex["word"][i]] = lex["score"][i]
     return h
 
+h = createHash(lex)
+
 def findSumScore(tweet, h):
     tokenList = tweet.split()
     sum = 0
@@ -28,7 +32,7 @@ def findSumScore(tweet, h):
 
 def findAverageScore(tweet, h):
     #cheeky line of cleaning the string here
-    tokenList = filterNonLatin(tweet.lower()).split()
+    tokenList = tweet.lower().split()
     sum = 0
     for tok in tokenList:
         if tok in h:
@@ -39,17 +43,24 @@ def findAverageScore(tweet, h):
     return sum/len(tokenList)
 
 def analyse(tweets):
-    lex = getLexicon()
-    h = createHash(lex)
+    # lex = getLexicon()
+    # h = createHash(lex)
     scores = [findAverageScore(tweet, h) for tweet in tweets]
     scoreFrame = pd.DataFrame()
     scoreFrame["tweet"] = tweets
     scoreFrame["score"] = scores
     return scoreFrame
 
+def wordcloud_ting(word):
+    score = 0
+    if word in h:
+        score = h[word]
+    
+    return score
+
 
 def test():
-    print(analyse(["Lib cucks live in my crawl space and it makes me happy at night"]))
+    print(analyse(["Lib"]))
 
 if __name__ == '__main__':
     test()
