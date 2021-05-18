@@ -15,8 +15,16 @@ def generate_word_cloud(word_list, filename, candidate):
     plt.imshow(wc)
     plt.axis("off")
     # save the wordcloud
-    plt.savefig(f'wordclouds/{filename}_{candidate}_selflexicon.png', facecolor='k', bbox_inches='tight')
+    # plt.savefig(f'wordclouds/{filename}_{candidate}_selflexicon.png', facecolor='k', bbox_inches='tight')
     #wc.to_file(f'wordclouds/{filename}_biden.png')
+
+def generate_word_cloud_counts(word_list, candidate, filename):
+    wc = wordcloud.WordCloud(collocations = False).process_text(" ".join(word_list).lower())
+    falo = dict(wc)
+    falo2 = sorted(falo.items(), key=lambda pair: pair[1], reverse=True)
+    file = open(f"wordclouds/wordcloud_frequency_{candidate}_{filename}.json", "w")
+    file.write(json.dumps(falo2))
+    file.close()
 
 def clean_tweet(tweet):
     # retweet cleaning
@@ -42,7 +50,7 @@ if __name__ == "__main__":
             analyzer = SentimentIntensityAnalyzer()
             pos = []
             neg = []
-            overall = []
+            #overall = []
             with open(f"tweets/{sys.argv[1].lower()}_cleaned_tweets.json") as json_file:
                 data = json.load(json_file)
                 for user in data:
@@ -53,19 +61,19 @@ if __name__ == "__main__":
                     for word in cleaned_tweet.split(' '):
                         word = word.replace('\n', ' ').replace('\xa0',' ').replace('.',' ').replace('·', ' ').replace('•',' ').replace('\t', ' ').replace(',',' ').replace('-', ' ').replace(':', ' ').replace('/',' ').replace('*',' ')
                         for w in word.split(' '):
-                            # if analyzer.polarity_scores(w)['compound'] > 0.05:
-                            #     pos.append(w)
-                            # elif analyzer.polarity_scores(w)['compound'] < -0.05:
-                            #     neg.append(w)
-                            if (len(w) > 0):
-                                vss = ps.wordcloud_ting(w)
+                            if analyzer.polarity_scores(w)['compound'] > 0.05:
+                                pos.append(w)
+                            elif analyzer.polarity_scores(w)['compound'] < -0.05:
+                                neg.append(w)
+                            # if (len(w) > 0):
+                            #     vss = ps.wordcloud_ting(w)
                                 
-                                if (vss > 0.5):
-                                    pos.append(w)
-                                    overall.append(w)
-                                elif (vss < 0.5):
-                                    neg.append(w)
-                                    overall.append(w)
+                            #     if (vss > 0.5):
+                            #         pos.append(w)
+                            #         overall.append(w)
+                            #     elif (vss < 0.5):
+                            #         neg.append(w)
+                            #         overall.append(w)
 
             # counter_pos = Counter(pos)
             # counter_neg = Counter(neg) 
@@ -79,9 +87,9 @@ if __name__ == "__main__":
             # f2.write(json_neg)
             # f2.close()
 
-            generate_word_cloud(pos, 'positive', sys.argv[1].lower())
-            generate_word_cloud(neg, 'negative', sys.argv[1].lower())
-            generate_word_cloud(overall, 'overall', sys.argv[1].lower())
+            generate_word_cloud_counts(pos, sys.argv[1].lower(), "positive")
+            generate_word_cloud_counts(neg, sys.argv[1].lower(), "negative")
+            #generate_word_cloud(overall, 'overall', sys.argv[1].lower())
 
             # with open("tweets/trump_cleaned_tweets.json") as json_file:
             #     data = json.load(json_file)
