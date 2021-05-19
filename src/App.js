@@ -33,16 +33,16 @@ statesCustomConfig = () => {
           fill: "#FF0000"
       },
       "AZ": {
-          fill: "#0015BC"
+          fill: "#FF0000"
       },
       "AR": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "CA": {
           fill: "#0015BC"
       },
       "CO": {
-          fill: "#0015BC"
+          fill: "#FF0000"
       },
       "CT": {
           fill: "#0015BC"
@@ -54,13 +54,13 @@ statesCustomConfig = () => {
           fill: "#FF0000"
       },
       "GA": {
-          fill: "#0015BC"
+          fill: "#FF0000"
       },
       "HI": {
-          fill: "#0015BC"
+          fill: "#FF0000"
       },
       "ID": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "IL": {
           fill: "#0015BC"
@@ -69,7 +69,7 @@ statesCustomConfig = () => {
           fill: "#FF0000"
       },
       "IA": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "KS": {
           fill: "#FF0000"
@@ -81,7 +81,7 @@ statesCustomConfig = () => {
           fill: "#FF0000"
       },
       "ME": {
-          fill: "#0015BC"
+          fill: "#FF0000"
       },
       "MD": {
           fill: "#0015BC"
@@ -99,16 +99,16 @@ statesCustomConfig = () => {
           fill: "#FF0000"
       },
       "MO": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "MT": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "NE": {
           fill: "#FF0000"
       },
       "NV": {
-          fill: "#0015BC"
+          fill: "#FF0000"
       },
       "NH": {
           fill: "#0015BC"
@@ -117,7 +117,7 @@ statesCustomConfig = () => {
           fill: "#0015BC"
       },
       "NM": {
-          fill: "#0015BC"
+          fill: "#FF0000"
       },
       "NY": {
           fill: "#0015BC"
@@ -126,13 +126,13 @@ statesCustomConfig = () => {
           fill: "#FF0000"
       },
       "ND": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "OH": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "OK": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "OR": {
           fill: "#0015BC"
@@ -141,10 +141,10 @@ statesCustomConfig = () => {
           fill: "#0015BC"
       },
       "RI": {
-          fill: "#0015BC"
+          fill: "#FF0000"
       },
       "SC": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "SD": {
           fill: "#FF0000"
@@ -153,10 +153,10 @@ statesCustomConfig = () => {
           fill: "#FF0000"
       },
       "TX": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "UT": {
-          fill: "#FF0000"
+          fill: "#0015BC"
       },
       "VT": {
           fill: "#0015BC"
@@ -175,7 +175,6 @@ statesCustomConfig = () => {
       },
       "WY": {
           fill: "#FF0000",
-          clickHandler: (event) => console.log('Custom handler for NJ', event.target.dataset)
       },
   };
 };
@@ -183,56 +182,56 @@ statesCustomConfig = () => {
  render(){
    const { stateName } = this.state
    var dataSource = [
-    ["Alabama", 95.7, 0.0412, 0.0672, 62, 37, "Incorrect"],
+    ["Alabama", 95.7, 0.0412, 0.0672, 62, 37, "Correct"],
     ["Alaska", 99.0, 0.0819, 0.0216, 53, 43, "Correct"],
-    ["Arizona", 97.4, 0.0096, 0.0701, 49, 49, "Correct"],
+    ["Arizona", 97.4, 0.0096, 0.0701, 49, 49, "Incorrect"],
     ["Arkansas", 97.5, -0.0194, 0.0479, 62, 35, "Incorrect"],
     ["California", 95.5, -0.0144, 0.1033, 33, 65, "Correct"],
-    ["Colorado", 101.6, 0.0043, 0.1152, 42, 55, "Correct"],
+    ["Colorado", 101.6, 0.0043, 0.1152, 42, 55, "Incorrect"],
     ["Connecticut", 103.1, -0.0123, 0.0647, 39, 59, "Correct"],
     ["Delaware", 100.4, -0.0687, 0.1641, 40, 59, "Correct"],
-    ["Florida", 98.4, 0.0115, 0.0784, 51, 48, "Incorrect"],
-    ["Georgia", 98.0, 0.0166, 0.0884, 49, 50, "Correct"],
-    ["Hawaii", 95.6, 0.0066, 0.0465, 34, 64, "Correct"],
+    ["Florida", 98.4, 0.0115, 0.0784, 51, 48, "Correct"],
+    ["Georgia", 98.0, 0.0166, 0.0884, 49, 50, "Incorrect"],
+    ["Hawaii", 95.6, 0.0066, 0.0465, 34, 64, "Incorrect"],
     ["Idaho", 101.4, -0.0207, 0.0654, 64, 33, "Incorrect"],
     ["Illinois", 99.9, -0.0327, 0.0902, 41, 57, "Correct"],
-    ["Indiana", 101.7, 0.0844, 0.1575, 57, 41, "Incorrect"],
+    ["Indiana", 101.7, 0.0844, 0.1575, 57, 41, "Correct"],
     ["Iowa", 103.2, -0.0513, 0.0850, 53, 45, "Incorrect"],
-    ["Kansas", 102.8, 0.0395, 0.1311, 56, 42, "Incorrect"],
-    ["Kentucky", 99.4, 0.0218, 0.0650, 62, 36, "Incorrect"],
-    ["Louisiana", 95.3, 0.0667, 0.1860, 59, 40, "Incorrect"],
-    ["Maine", 103.4, 0.0089, 0.1268, 44, 53, "Correct"],
+    ["Kansas", 102.8, 0.0395, 0.1311, 56, 42, "Correct"],
+    ["Kentucky", 99.4, 0.0218, 0.0650, 62, 36, "Correct"],
+    ["Louisiana", 95.3, 0.0667, 0.1860, 59, 40, "Correct"],
+    ["Maine", 103.4, 0.0089, 0.1268, 44, 53, "Incorrect"],
     ["Maryland", 99.7, -0.0412, 0.0576, 32, 65, "Correct"],
     ["Massachusetts", 104.3, -0.0317, 0.0994, 32, 66, "Correct"],
     ["Michigan", 100.5, -0.0513, 0.0588, 48, 51, "Correct"],
     ["Minnesota", 103.7, -0.0025, 0.0934, 45, 52, "Correct"],
-    ["Mississippi", 94.2, 0.0230, 0.0437, 57, 41, "Incorrect"],
+    ["Mississippi", 94.2, 0.0230, 0.0437, 57, 41, "Correct"],
     ["Missouri", 101.0, -0.0401, 0.0791, 57, 41, "Incorrect"],
     ["Montana", 103.4, -0.0509, 0.0526, 57, 41, "Incorrect"],
-    ["Nebraska", 102.3, 0.0499, 0.0753, 58, 39, "Incorrect"],
-    ["Nevada", 96.5, 0.0143, 0.1240, 48, 50, "Correct"],
+    ["Nebraska", 102.3, 0.0499, 0.0753, 58, 39, "Correct"],
+    ["Nevada", 96.5, 0.0143, 0.1240, 48, 50, "Incorrect"],
     ["New Hampshire", 104.2, -0.0265, 0.0425, 45, 53, "Correct"],
     ["New Jersey", 102.8, -0.0084, 0.0782, 41, 57, "Correct"],
-    ["New Mexico", 95.7, 0.0395, 0.1416, 44, 54, "Correct"],
+    ["New Mexico", 95.7, 0.0395, 0.1416, 44, 54, "Incorrect"],
     ["New York", 100.7, -0.0390, 0.0890, 38, 61, "Correct"],
-    ["North Carolina", 100.2, 0.0064, 0.1005, 50, 49, "Incorrect"],
+    ["North Carolina", 100.2, 0.0064, 0.1005, 50, 49, "Correct"],
     ["North Dakota", 103.8, -0.0630, 0.0964, 65, 32, "Incorrect"],
     ["Ohio", 101.8, -0.0105, 0.0839, 53, 45, "Incorrect"],
     ["Oklahoma", 99.3, -0.0384, 0.0850, 65, 32, "Incorrect"],
     ["Oregon", 101.2, -0.0342, 0.0793, 40, 56, "Correct"],
     ["Pennsylvania", 101.5, -0.0710, 0.0910, 49, 50, "Correct"],
-    ["Rhode Island", 99.5, 0.0111, 0.1014, 39, 59, "Correct"],
+    ["Rhode Island", 99.5, 0.0111, 0.1014, 39, 59, "Incorrect"],
     ["South Carolina", 98.4, -0.0506, 0.0163, 55, 43, "Incorrect"],
-    ["South Dakota", 102.8, 0.0864, 0.1721, 62, 36, "Incorrect"],
-    ["Tennessee", 97.7, 0.0319, 0.1106, 61, 38, "Incorrect"],
+    ["South Dakota", 102.8, 0.0864, 0.1721, 62, 36, "Correct"],
+    ["Tennessee", 97.7, 0.0319, 0.1106, 61, 38, "Correct"],
     ["Texas", 100.0, -0.0141, 0.0775, 52, 46, "Incorrect"],
     ["Utah", 101.1, -0.0050, 0.0409, 58, 38, "Incorrect"],
     ["Vermont", 103.9, -0.1301, 0.0433, 31, 66, "Correct"],
     ["Virginia", 101.9, -0.0273, 0.1045, 44, 54, "Correct"],
-    ["Washington", 101.9, -0.03551, 0.0962, 39, 58, "Correct"],
-    ["West Virginia", 98.7, 0.0103, 0.0636, 69, 30, "Incorrect"],
+    ["Washington", 101.9, -0.0355, 0.0962, 39, 58, "Correct"],
+    ["West Virginia", 98.7, 0.0103, 0.0636, 69, 30, "Correct"],
     ["Wisconsin", 102.9, -0.0287, 0.1153, 49, 49, "Correct"],
-    ["Wyoming", 102.4, 0.0146, 0.0520, 70, 27, "Incorrect"],
+    ["Wyoming", 102.4, 0.0146, 0.0520, 70, 27, "Correct"],
    ]
 
    var data
@@ -428,7 +427,7 @@ statesCustomConfig = () => {
                     <th>Biden Sentiment</th>
                     <th>Trumps Actual Results</th>
                     <th>Bidens Actual Results</th>
-                    <th>Prediction Off Sentiment Analysis</th>
+                    <th>Prediction Based on Sentiment Analysis</th>
                 </tr>
                 {stateName !== "All" ?
                 <tr>
